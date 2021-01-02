@@ -37,22 +37,49 @@ export function Todo() {
   // const stateSelector = Redux.useSelector(todoSelector.stateSelector);
   // const { todos } = stateSelector;
   const [ todos, setTodos ] = React.useState(initialTodos);
+  const [ todoText, setTodoText ] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+
   const unDone = todos.filter((todo) => !todo.done);
-  const onToggle = () => {
-    // const setDoneData = todos.map((todo) => {
-    //   if(todo.done) {
-    //     return { ...todo }
-    //   }
-    // })
-    // setTodos(setDoneData);
-    console.log('test')
+  const openClick = () => {
+    return setOpen(!open);
+  };
+  const onToggle = (item) => {
+    const setDoneData = todos.map((todo) => {
+      if(item.id === todo.id) {
+        return { ...todo, done: !todo.done };
+      } else {
+        return { ...todo };
+      }
+    })
+    setTodos(setDoneData);
   }
-  console.log(todos)
+  const removeClick = (item) => {
+    const setRemoveData = todos.filter((todo) => {
+      return item.id !== todo.id;
+    })
+    setTodos(setRemoveData);
+  }
+  const onChange = (e) => {
+    setTodoText(e.target.value)
+  }
+  const nextId = React.useRef(5);
+  const onSubmit = (e) => {
+    e.preventDefault(); // 새로고침 방지
+    setTodos(todos.concat({
+      id: nextId.current,
+      text: todoText,
+      done: false
+    }))
+    nextId.current += 1;
+    setOpen(false);
+    setTodoText('');
+  }
   return (
     <TodoTemplate>
       <TodoHead unDone={unDone} />
-      <TodoList todos={todos} onToggle={onToggle} />
-      <TodoCreate />
+      <TodoList todos={todos} onToggle={onToggle} removeClick={removeClick} />
+      <TodoCreate onChange={onChange} onSubmit={onSubmit} openClick={openClick} open={open} />
     </TodoTemplate>
   );
 };

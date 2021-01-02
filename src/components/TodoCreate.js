@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { MdAdd } from 'react-icons/md';
 
@@ -75,24 +75,24 @@ const Input = styled.input`
   box-sizing: border-box;
 `;
 
-function TodoCreate() {
-  const [open, setOpen] = React.useState(false);
-  const onToggle = () => setOpen(!open);
+export function TodoCreate({ openClick, open, onChange, onSubmit }) {
+  
+  
 
   return (
     <>
     {open && (
       <InsertFormPositioner>
-        <InsertForm>
-          <Input autoFocus placeholder="할 일을 입력 후, Enter를 누르세요" />
+        <InsertForm onSubmit={onSubmit}>
+          <Input onChange={onChange} autoFocus placeholder="할 일을 입력 후, Enter를 누르세요" />
         </InsertForm>
       </InsertFormPositioner>
     )}
-    <CircleButton onClick={onToggle} open={open}>
+    <CircleButton onClick={openClick} open={open}>
       <MdAdd />
     </CircleButton>
     </>
   );
 };
 
-export default TodoCreate;
+// export default TodoCreate;
